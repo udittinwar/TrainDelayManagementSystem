@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Delay Information</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .header {
+            background: #002147;
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #002147;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            display: block;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            outline: none;
+            border: 1px solid #ddd;
+            background: #ffffff;
+            color: #333;
+        }
+
+        button {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: #e67600;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: #002147;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        Indian Railways | Train Delay Information
+    </div>
+
+    <div class="container">
+        <h2>🚆 Train Delay Details</h2>
+        <p><strong>Train Name:</strong> <span id="train-name"></span></p>
+        <p><strong>Train Number:</strong> <span id="train-number"></span></p>
+        
+        <label for="delay-time">⏳ Enter Delay Time (in minutes):</label>
+        <input type="number" id="delay-time" placeholder="Enter delay time" min="0" required>
+
+        <label for="delay-reason">📌 Select Delay Reason:</label>
+        <select id="delay-reason">
+            <option value="Signal Issue">Signal Issue</option>
+            <option value="Technical Problem">Technical Problem</option>
+            <option value="Track Maintenance">Track Maintenance</option>
+            <option value="Weather Conditions">Weather Conditions</option>
+            <option value="Operational Issues">Operational Issues</option>
+        </select>
+
+        <button onclick="submitDelay()">✅ Submit</button>
+    </div>
+
+    <div class="footer">
+        © 2025 Indian Railways | Ministry of Railways, Government of India
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const trainNumber = urlParams.get('train');
+        const trainName = urlParams.get('name');
+
+        // Decode train name properly
+        const decodedTrainName = trainName ? decodeURIComponent(trainName) : "N/A";
+
+        // Display train info
+        document.getElementById("train-number").textContent = trainNumber || "N/A";
+        document.getElementById("train-name").textContent = decodedTrainName;
+
+        function submitDelay() {
+            const delayTime = document.getElementById("delay-time").value;
+            const reason = document.getElementById("delay-reason").value;
+            
+            if (!delayTime) {
+                alert("⚠️ Please enter delay time.");
+                return;
+            }
+            
+            alert(`🚆 Train ${decodedTrainName} (${trainNumber}) is delayed by ${delayTime} minutes due to ${reason}.`);
+        }
+    </script>
+
+</body>
+</html>
