@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Railways | Fog Signal Notification System</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .header {
+            background: #002147;
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(-10px); }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            text-align: center;
+            flex-grow: 1;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #002147;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            display: block;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: #333;
+            outline: none;
+            margin-top: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input:hover, select:hover {
+            transform: scale(1.02);
+        }
+
+        button {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: #e67600;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: #002147;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        Indian Railways 
+    </div>
+
+    <div class="container">
+        <h2>🚆 Track Your Train</h2>
+        <h2> Enter Details </h2>
+        <form id="train-info-form">
+            <label for="train-input">🚂 Enter Train Name/Number</label>
+            <input list="train-list" id="train-input" placeholder="🚆 Type Train Name or Number" required>
+            <datalist id="train-list"></datalist>
+
+            <label for="station-input">📍 Enter Current Location</label>
+            <input list="station-list" id="station-input" placeholder="🚉 Type Station Name" required>
+            <datalist id="station-list"></datalist>
+
+            <button type="button" id="track-train">🔍 Track Train</button>
+            <button type="button" id="train-delay">⏳ Report Train Delay</button>
+        </form>
+
+        <button type="button" class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="footer">
+        © 2025 Indian Railways | Ministry of Railways, Government of India
+    </div>
+
+    <script>
+        // Predefined Train Data
+        const trainList = [
+            { number: "12001", name: "Shatabdi Express" },
+            { number: "12626", name: "Kerala Express" },
+            { number: "12951", name: "Rajdhani Express" },
+            { number: "12301", name: "Howrah Rajdhani" },
+            { number: "11058", name: "Amritsar Express" },
+            { number: "11040", name: "Maharashtra Express" },
+        ];
+
+        // Predefined Station List
+        const stationList = [
+            "New Delhi (NDLS)", "Mumbai Central (MMCT)", "Kolkata Howrah (HWH)",
+            "Chennai Central (MAS)", "Bangalore City (SBC)", "Ahmedabad (ADI)","Nagpur(NGP)"
+        ];
+
+        // Populate Train Datalist
+        const trainDatalist = document.getElementById("train-list");
+        trainList.forEach(train => {
+            let option = document.createElement("option");
+            option.value = `${train.number} - ${train.name}`;
+            trainDatalist.appendChild(option);
+        });
+
+        // Populate Station Datalist
+        const stationDatalist = document.getElementById("station-list");
+        stationList.forEach(station => {
+            let option = document.createElement("option");
+            option.value = station;
+            stationDatalist.appendChild(option);
+        });
+        document.getElementById("train-delay").addEventListener("click", function() {
+        const trainInput = document.getElementById("train-input").value;
+        
+        if (!trainInput) {
+            alert("🚆 Please enter a train name or number! & Location ");
+            return;
+        }
+
+        // Extract train number and name from input
+        const trainParts = trainInput.split(" - ");
+        const trainNumber = trainParts[0] || "N/A";
+        const trainName = trainParts[1] || "Unknown";
+
+        // Redirect to delayInfo.html with train details
+        window.location.href = `delayInfo.html?train=${trainNumber}&name=${encodeURIComponent(trainName)}`;
+    });
+    document.getElementById("track-train").addEventListener("click", function() {
+        const trainInput = document.getElementById("train-input").value;
+        
+        if (!trainInput) {
+            alert("🚆 Please enter a train name or number!");
+            return;
+        }
+
+        // Extract train number and name from input
+        const trainParts = trainInput.split(" - ");
+        const trainNumber = trainParts[0] || "N/A";
+        const trainName = trainParts[1] || "Unknown";
+
+        // Redirect to train tracking page with train details
+        window.location.href = `trackingPage.html?train=${trainNumber}&name=${encodeURIComponent(trainName)}`;
+    });
+    </script>
+</body>
+</html>
+
+
